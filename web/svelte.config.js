@@ -1,50 +1,22 @@
-import preprocess from 'svelte-preprocess';
-import adapter from '@sveltejs/adapter-static';
-import {vitePreprocess} from '@sveltejs/kit/vite';
-import {execSync} from 'child_process';
-
-function getVersion() {
-	try {
-		return execSync('git rev-parse --short HEAD').toString().trim();
-	} catch {
-		const timestamp = Date.now().toString();
-		console.error(`could not get commit-hash to set a version id, falling back on timestamp ${timestamp}`);
-		return timestamp;
-	}
-}
-const VERSION = getVersion();
+import adapter from '@sveltejs/adapter-vercel';
+import { vitePreprocess } from '@sveltejs/kit/vite';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	preprocess: [
-		vitePreprocess(),
-		preprocess({
-			// postcss make use of tailwind
-			// we ensure it get processed, see postcss.config.cjs
-			postcss: true,
-		}),
-	],
+  // Consult https://kit.svelte.dev/docs/integrations#preprocessors
+  // for more information about preprocessors
+  preprocess: vitePreprocess(),
 
-	kit: {
-		adapter: adapter(),
-		version: {
-			// we create a dertemrinistic building using a derterministic version (via git commit, see above)
-			name: VERSION,
-		},
-		alias: {
-			// alias for web-config
-			'web-config': './src/web-config.json',
-			$external: './src/external',
-		},
-		serviceWorker: {
-			// we handle it ourselves here : src/service-worker-handler.ts
-			register: false,
-		},
-		paths: {
-			// this is to make it work on ipfs (on an unknown path)
-			relative: true,
-		},
-	},
+  kit: {
+    // adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
+    // If your environment is not supported or you settled on a specific environment, switch out the adapter.
+    // See https://kit.svelte.dev/docs/adapters for more information about adapters.
+    adapter: adapter(),
+    alias: {
+      // 'svelte-viem': 'src/lib/svelte-viem',
+      // 'ethoolbox': 'src/lib/ethoolbox'
+    }
+  }
 };
 
 export default config;

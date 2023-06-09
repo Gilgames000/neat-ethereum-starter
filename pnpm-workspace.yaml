@@ -1,4 +1,4 @@
 packages:
-  - 'contracts'
-  - 'web'
-  - 'packages/*'
+    - 'contracts'
+    - 'web'
+    - 'packages/*'

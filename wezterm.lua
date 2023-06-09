@@ -8,8 +8,8 @@ wezterm.on('gui-startup', function(cmd)
 
 
     }
-    tab:set_title 'cool-ethereum-template'
-    window:set_title 'cool-ethereum-template'
+    tab:set_title 'neat-ethereum-starter'
+    window:set_title 'neat-ethereum-starter'
 
     local pane_web = pane:split {
         args = { 'bash', '-i', '-c', 'cd ' .. cmd.args[1] .. '; sleep 1; pnpm start:web; bash' },

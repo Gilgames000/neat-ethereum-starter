@@ -1,83 +1,85 @@
-<script>
-	import '../app.postcss';
-	import ThemeChanger from '$lib/components/daisyui/ThemeChanger.svelte';
-	import NavTabs from '$lib/components/daisyui/NavTabs.svelte';
+<script lang="ts">
+  import '../theme.css';
+  import '@skeletonlabs/skeleton/styles/all.css';
+  import '../app.postcss';
 
-	import {name, description, themeColor, canonicalURL, appleStatusBarStyle, ENSName} from 'web-config';
-	import NewVersionNotification from '$lib/components/web/NewVersionNotification.svelte';
-	import NoInstallPrompt from '$lib/components/web/NoInstallPrompt.svelte';
-	import {url} from '$lib/utils/path';
-	import Install from '$lib/components/web/Install.svelte';
+  import { appName, appDescription, appUrl } from '../application.json';
+  import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
+  import { storePopup } from '@skeletonlabs/skeleton';
+  import { queryParam } from 'sveltekit-search-params';
+  import { browser } from '$app/environment';
+  import { defaultChain, getChainById, isSupportedChainId } from '$lib/config';
+  import { blockNumber, selectedChainId, switchSelectedChain } from '$lib/chain';
+  import { modalComponentRegistry } from '$lib/modals';
 
-	const host = canonicalURL.endsWith('/') ? canonicalURL : canonicalURL + '/';
-	const previewImage = host + 'preview.png';
+  import NavBar from './NavBar.svelte';
+  import WrongNetwork from './WrongNetwork.svelte';
+  import { AppShell, Drawer, Toast } from '@skeletonlabs/skeleton';
+  import { Modal } from '@skeletonlabs/skeleton';
+  import DrawerContents from './DrawerContents.svelte';
+  import Footer from './Footer.svelte';
+  import { page } from '$app/stores';
+  import { onMount } from 'svelte';
+
+  const title = appName;
+  const description = appDescription;
+  const host = appUrl.endsWith('/') ? appUrl : appUrl + '/';
+  const previewImage = host + 'preview.png';
+
+  storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+
+  const chainIdUrlParam = queryParam('chainId', {
+    encode: (value: number) => value.toString(),
+    decode: (value: string | null) => (value ? parseInt(value) : null)
+    //defaultValue: defaultChain.id
+  });
+
+  $: initialLoad = true; // this is needed to avoid the initial load of the page to trigger the chainId change
+
+  onMount(() => {
+    if ($chainIdUrlParam && isSupportedChainId($chainIdUrlParam)) {
+      const newChain = getChainById($chainIdUrlParam);
+      switchSelectedChain(newChain);
+    }
+  });
 </script>
 
 <svelte:head>
-	<title>{name}</title>
-	<meta name="title" content={name} />
-	<meta name="description" content={description} />
-	{#if ENSName}<meta name="Dwebsite" content={ENSName} /> {/if}
-
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content={host} />
-	<meta property="og:title" content={name} />
-	<meta property="og:description" content={description} />
-	<meta property="og:image" content={previewImage} />
-	<meta property="twitter:card" content="summary_large_image" />
-	<meta property="twitter:url" content={host} />
-	<meta property="twitter:title" content={name} />
-	<meta property="twitter:description" content={description} />
-	<meta property="twitter:image" content={previewImage} />
-
-	<!-- minimal -->
-	<!-- use SVG, if need PNG, adapt accordingly -->
-	<!-- TODO automatise -->
-	<link rel="icon" href={url('/pwa/favicon.svg')} type="image/svg+xml" />
-	<link rel="icon" href={url('/pwa/favicon.ico')} sizes="any" /><!-- 32×32 -->
-	<link rel="apple-touch-icon" href={url('/pwa/apple-touch-icon.png')} /><!-- 180×180 -->
-	<link rel="manifest" href={url('/pwa/manifest.webmanifest')} />
-
-	<!-- extra info -->
-	<meta name="theme-color" content={themeColor} />
-	<meta name="mobile-web-app-capable" content="yes" />
-	<meta name="application-name" content={name} />
-
-	<!-- apple -->
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-status-bar-style" content={appleStatusBarStyle} />
-	<meta name="apple-mobile-web-app-title" content={name} />
+  <title>{title}</title>
+  <meta name="title" content={title} />
+  <meta name="description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={host} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={previewImage} />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={host} />
+  <meta property="twitter:title" content={title} />
+  <meta property="twitter:description" content={description} />
+  <meta property="twitter:image" content={previewImage} />
 </svelte:head>
 
-<div class="sticky top-0 z-50 navbar bg-base-100 min-h-0 p-1 border-b-2 border-primary">
-	<div class="flex-1">
-		<NavTabs
-			pages={[
-				{pathname: '/', title: 'Home'},
-				{pathname: '/demo/', title: 'Demo'},
-				{pathname: '/debug/', title: 'Debug'},
-				{pathname: '/about/', title: 'About'},
-			]}
-		/>
-	</div>
-	<div class="flex-none">
-		<ThemeChanger />
-	</div>
-</div>
+<!-- <WrongNetwork /> -->
 
-<!-- Disable native prompt from browsers -->
-<NoInstallPrompt />
-<!-- You can also add your own Install Prompt: -->
-<!-- <Install src={url('/icon.svg')} alt="Jolly Roger" /> -->
+<Toast buttonDismiss="btn" />
 
-<!-- Here is Notification for new version -->
-<NewVersionNotification src={url('/icon.svg')} alt="Jolly Roger" />
+<Modal regionBackdrop="backdrop-blur-sm" duration={250} components={modalComponentRegistry} />
 
-<!-- use -my-20 to ensure the navbar is considered when using min-h-screen to offset the footer (when content is too small)-->
-<div class="-my-20 flex flex-col min-h-screen justify-between">
-	<!--div to revert -my-20-->
-	<div class="mt-20">
-		<slot />
-	</div>
+<Drawer position="left" width="w-fit">
+  <DrawerContents />
+</Drawer>
 
-</div>
+<AppShell>
+  <svelte:fragment slot="header">
+    <NavBar />
+  </svelte:fragment>
+
+  {#key $selectedChainId}
+    <slot />
+  {/key}
+
+  <svelte:fragment slot="pageFooter">
+    <Footer />
+  </svelte:fragment>
+</AppShell>

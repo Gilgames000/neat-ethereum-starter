@@ -1,0 +1,7 @@
+{
+  "appName": "Neat Ethereum Starter",
+  "appShortName": "Neat Ethereum Starter",
+  "appDescription": "A neat starter project for building Ethereum dapps powered by SvelteKit, Tailwind CSS, Skeleton.dev, and Viem.",
+  "appShortDescription": "A neat starter project for building Ethereum dapps.",
+  "appUrl": "https://app.example.com"
+}
