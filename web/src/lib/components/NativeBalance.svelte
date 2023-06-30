@@ -1,7 +1,7 @@
 <script lang="ts">
     import { formatCurrencyAmount } from 'ethoolbox';
     import type { Address } from 'ethoolbox';
-    import { createNativeBalanceStore } from '$lib/state/balancesNative';
+    import { createNativeBalanceStore } from '$lib/state';
 
     export let address: Address;
 
