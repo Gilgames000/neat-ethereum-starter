@@ -19,14 +19,17 @@ function createErc20BalanceStoreForChainId(chainId: number, token: Token, wallet
 
     const balanceStore = createEtherStoreForChainId<CurrencyAmount<Token>>(
         chainId,
+        [
+            {
+                address: token.address,
+                abi: ERC20Abi,
+                functionName: 'balanceOf',
+                args: [walletAddress]
+            }
+        ],
         {
-            address: token.address,
-            abi: ERC20Abi,
-            functionName: 'balanceOf',
-            args: [walletAddress]
-        },
-        {
-            processor: (balance: unknown) => {
+            processor: (args: unknown[]) => {
+                const [balance] = args;
                 if (typeof balance !== 'bigint')
                     throw new Error(`balanceOf returned ${balance} instead of a bigint`);
                 return CurrencyAmount.fromRawAmount(token, [balance, token.decimals]);

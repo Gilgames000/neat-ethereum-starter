@@ -26,20 +26,20 @@ function createNativeBalanceStoreForChainId(chainId: SupportedChainId, walletAdd
 
     const balanceStore = createEtherStoreForChainId<CurrencyAmount<NativeCurrency>>(
         chainId,
+        [
+            {
+                address: chain.contracts.multicall3.address,
+                abi: Multicall3Abi,
+                functionName: 'getEthBalance',
+                args: [walletAddress]
+            }
+        ],
         {
-            address: chain.contracts.multicall3.address,
-            abi: Multicall3Abi,
-            functionName: 'getEthBalance',
-            args: [walletAddress]
-        },
-        {
-            processor: (balance: unknown) => {
+            processor: (args: unknown[]) => {
+                const [balance] = args;
                 if (typeof balance !== 'bigint')
                     throw new Error(`getEthBalance returned ${balance} instead of a bigint`);
-                return CurrencyAmount.fromRawAmount(nativeCurrency, [
-                    balance,
-                    nativeCurrency.decimals
-                ]);
+                return CurrencyAmount.fromRawAmount(nativeCurrency, [balance, nativeCurrency.decimals]);
             }
         }
     );
