@@ -8,8 +8,8 @@ const MODE = process.env.NODE_ENV;
 const development = MODE === 'development';
 
 export default defineConfig({
-  plugins: [sveltekit()],
-  test: {
-    include: ['src/**/*.{test,spec}.{js,ts}']
-  }
+    plugins: [sveltekit()],
+    test: {
+        include: ['src/**/*.{test,spec}.{js,ts}']
+    }
 });

@@ -4,11 +4,11 @@ import { drawerStore } from '@skeletonlabs/skeleton';
 export const isDrawerOpen: Writable<boolean> = writable(false);
 
 export function openDrawer(): void {
-  drawerStore.open();
-  isDrawerOpen.set(true);
+    drawerStore.open();
+    isDrawerOpen.set(true);
 }
 
 export function closeDrawer(): void {
-  drawerStore.close();
-  isDrawerOpen.set(false);
+    drawerStore.close();
+    isDrawerOpen.set(false);
 }

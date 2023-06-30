@@ -1,9 +1,8 @@
 layout {
 	pane {
-		pane {}
 		pane split_direction="vertical" {
 			pane command="bash"  {
-				args "-c" "pnpm start:local_node; ${SHELL-bash}"
+				args "-c" "pnpm start:local-node; ${SHELL-bash}"
 			}
 			pane {
 				pane command="bash"  {

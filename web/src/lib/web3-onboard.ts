@@ -14,31 +14,31 @@ const gnosis = gnosisModule({ whitelistedDomains: [/safe.global/, /safe.neobase.
 const walletConnect = walletConnectModule();
 
 if (!onboard) {
-  onboard = Onboard({
-    wallets: [injected, gnosis, walletConnect],
-    chains: supportedChainsList.map(({ id, name }) => ({ id, label: name })),
-    accountCenter: {
-      desktop: {
-        enabled: false,
-        containerElement: 'html'
-      },
-      mobile: {
-        enabled: false,
-        containerElement: 'html'
-      }
-    },
-    appMetadata: {
-      name: appName,
-      icon: `${appUrl}/images/favicon.ico`,
-      logo: `${appUrl}/images/favicon.ico`,
-      description: appDescription,
-      recommendedInjectedWallets: [
-        { name: 'Rabby', url: 'https://rabby.io' },
-        { name: 'MetaMask', url: 'https://metamask.io' },
-        { name: 'Brave', url: 'https://brave.com/wallet' }
-      ]
-    }
-  });
+    onboard = Onboard({
+        wallets: [injected, gnosis, walletConnect],
+        chains: supportedChainsList.map(({ id, name }) => ({ id, label: name })),
+        accountCenter: {
+            desktop: {
+                enabled: false,
+                containerElement: 'html'
+            },
+            mobile: {
+                enabled: false,
+                containerElement: 'html'
+            }
+        },
+        appMetadata: {
+            name: appName,
+            icon: `${appUrl}/images/favicon.ico`,
+            logo: `${appUrl}/images/favicon.ico`,
+            description: appDescription,
+            recommendedInjectedWallets: [
+                { name: 'Rabby', url: 'https://rabby.io' },
+                { name: 'MetaMask', url: 'https://metamask.io' },
+                { name: 'Brave', url: 'https://brave.com/wallet' }
+            ]
+        }
+    });
 }
 
 export default onboard as OnboardAPI;
