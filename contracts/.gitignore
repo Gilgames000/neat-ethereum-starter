@@ -31,3 +31,8 @@ node_modules
 .vscode/*
 !.vscode/extensions.json
 !*.default
+
+# dotenv
+.env
+.env.*
+!.env.example

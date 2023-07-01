@@ -11,7 +11,7 @@ const networks = fs.readdirSync(deploymentsDir);
 const exportCmd = 'npx forge-deploy export';
 const tmpExportsDir = path.join(__dirname, '.', 'cache', 'tmp-exports');
 
-let output = 'export const deployments = {\n';
+let output = 'export const deployments = { ';
 for (const network of networks) {
     const exportCmdWithArgs = `${exportCmd} ${network} ${path.join(tmpExportsDir, network)}.json`;
     console.log(exportCmdWithArgs);

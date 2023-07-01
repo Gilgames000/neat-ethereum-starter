@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
+import 'forge-deploy-proxy/ForgeDeploy_Proxied.sol';
+
 /// @notice a registry that let user send greetings to the world
-///  It is used as a demo for neat-ethereum-starter,
+///  It is used as a demo for jolly-roger,
 ///  a fully featured SDK to build entirely decentralised apps and games
 ///  It is inteded to be deployed via upgradeable proxy locally
-///  to showcase the HCR (Hot Contract Replacement) capabilities of `forge-deploy`
+///  to showcase the HCR (Hot Contract Replacement) capabilities of `hardhat-deploy`
 ///  but immutable on live networks.
-contract GreetingsRegistry {
+contract GreetingsRegistry is Proxied {
     // ----------------------------------------------------------------------------------------------
     // EVENTS
     // ----------------------------------------------------------------------------------------------
@@ -53,7 +55,7 @@ contract GreetingsRegistry {
     //
     /// @dev called by the admin when the contract is deployed as a proxy
     /// @param initialPrefix the prefix that will be prepended to every user message goig forward
-    function postUpgrade(string memory initialPrefix) public {
+    function postUpgrade(string memory initialPrefix) public proxied {
         _prefix = initialPrefix;
     }
 
@@ -86,8 +88,11 @@ contract GreetingsRegistry {
     /// @param dayTimeInSeconds the time of the day in seconds the message was written.
     function setMessage(string calldata message, uint24 dayTimeInSeconds) external {
         string memory actualMessage = string(bytes.concat(bytes(_prefix), bytes(message)));
-        _messages[msg.sender] =
-            Message({content: actualMessage, timestamp: block.timestamp, dayTimeInSeconds: dayTimeInSeconds});
+        _messages[msg.sender] = Message({
+            content: actualMessage,
+            timestamp: block.timestamp,
+            dayTimeInSeconds: dayTimeInSeconds
+        });
         emit MessageChanged(msg.sender, block.timestamp, actualMessage, dayTimeInSeconds);
     }
 }

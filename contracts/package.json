@@ -10,10 +10,12 @@
     "devDependencies": {
         "as-soon": "^0.0.4",
         "forge-deploy": "0.1.1",
-        "forge-deploy-proxy": "^0.1.0"
+        "forge-deploy-proxy": "^0.1.0",
+        "just-install": "^1.0.11",
+        "solmate": "^6.1.0"
     },
     "scripts": {
-        "prepare": "forge install --no-git foundry-rs/forge-std@v1.5.3 || echo ''",
+        "prepare": "just install",
         "start": "zellij --layout zellij.kdl a template-foundry || zellij --layout zellij.kdl -s template-foundry",
         "stop": "zellij kill-session template-foundry",
         "gen-deployer": "forge-deploy gen-deployer --templates node_modules/forge-deploy-proxy/templates",
@@ -30,9 +32,9 @@
         "watch_test": "as-soon -w script -w src -w test pnpm test",
         "watch_out_deploy": "pnpm compile; as-soon -w out pnpm run deploy",
         "watch_out_test": "pnpm compile; as-soon -w out pnpm run deploy",
-        "deploy": "forge script script/Deploy.s.sol --private-key ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --rpc-url http://localhost:8545 --broadcast && forge-deploy sync && pnpm export-all ../web/src/lib/contracts.ts",
-        "deploy:localhost": "DEPLOYMENT_CONTEXT=localhost forge script script/Deploy.s.sol --private-key ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --rpc-url http://localhost:8545 --broadcast && forge-deploy sync && pnpm export-all ../web/src/lib/contracts.ts",
-        "script": "forge script --private-key ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --rpc-url http://localhost:8545 --broadcast",
+        "deploy": "just deploy && pnpm export-all ../web/src/lib/contracts.ts",
+        "deploy:localhost": "DEPLOYMENT_CONTEXT=localhost just deploy-localhost && pnpm export-all ../web/src/lib/contracts.ts",
+        "script": "just run-forge-script",
         "local-node": "rm -Rf deployments/localhost && anvil --host 0.0.0.0"
     },
     "packageManager": "pnpm@8.6.0"

@@ -23,6 +23,12 @@ importers:
       forge-deploy-proxy:
         specifier: ^0.1.0
         version: 0.1.0(forge-deploy@0.1.1)
+      just-install:
+        specifier: ^1.0.11
+        version: 1.0.11
+      solmate:
+        specifier: ^6.1.0
+        version: 6.1.0
 
   web:
     devDependencies:
@@ -3991,6 +3997,13 @@ packages:
       graceful-fs: 4.2.11
     dev: true
 
+  /just-install@1.0.11:
+    resolution: {integrity: sha512-3nW53hWK9muHUTXthiTcUqFkd5FXDad7YLoDWJonVhPUZxX8PgCVGvaI8AQ5gqJZ45MBd/hdqg5XPIWPh9Bk/g==}
+    engines: {node: '>=8.5'}
+    hasBin: true
+    requiresBuild: true
+    dev: true
+
   /keyvaluestorage-interface@1.0.0:
     resolution: {integrity: sha512-8t6Q3TclQ4uZynJY9IGr2+SsIGwK9JHcO6ootkHCGA0CrQCRy+VkouYNO2xicET6b9al7QKzpebNow+gkpCL8g==}
     dev: true
@@ -4954,6 +4967,10 @@ packages:
   /slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
+    dev: true
+
+  /solmate@6.1.0:
+    resolution: {integrity: sha512-gxG4YU5nnAQ+Ac23R44GS3Xo3+X0+8XCe4/P1KvVobL5ERBzQBG/xMv7NSvVo/pkHSYGufgUAPjiueYxujKJAA==}
     dev: true
 
   /sonic-boom@2.8.0:

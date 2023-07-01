@@ -1,0 +1,88 @@
+set dotenv-load
+
+deployment-context := `echo ${DEPLOYMENT_CONTEXT:-localhost}`
+deployer := `echo ${DEPLOYER:-0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266}`
+deployer-private-key := `echo ${DEPLOYER_PRIVATE_KEY:-ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}`
+rpc-url := `echo ${RPC_URL:-http://localhost:8545}`
+keystore-path := `echo ${KEYSTORE_PATH}`
+
+all: install build
+
+install:
+    forge install --no-git foundry-rs/forge-std@v1.5.3 || echo ''
+    mkdir -p deployments
+
+update:
+    forge update
+
+solc:
+	svm install 0.8.19
+	svm use 0.8.19
+
+build:
+    pnpm compile
+
+test: build
+    forge test --force -vvv
+
+clean:
+    forge clean
+
+gas-report:
+    forge test --gas-report
+
+flatten contract:
+    forge flatten {{contract}}
+
+slither contract:
+    slither {{contract}}
+
+format:
+    prettier --write src/**/*.sol \
+    && prettier --write src/*.sol \
+    && prettier --write test/**/*.sol \
+    && prettier --write test/*.sol \
+    && prettier --write script/**/*.sol \
+    && prettier --write script/*.sol
+
+restore-submodules:
+    #!/bin/sh
+    set -e
+    git config -f .gitmodules --get-regexp '^submodule\..*\.path$' |
+        while read path_key path
+        do
+            url_key=$(echo $path_key | sed 's/\.path/.url/')
+            url=$(git config -f .gitmodules --get "$url_key")
+            git submodule add $url $path
+        done
+
+run-forge-script name func="run()" *args="":
+    #!/bin/sh
+
+    echo "Running script {{name}}"
+    echo "Func: {{func}}"
+    echo "Args: {{args}}"
+
+    if [ -n "${deployer-private-key}" ]; then
+        KEYSTORE_OPTION="--private-key {{deployer-private-key}}"
+    else
+        KEYSTORE_OPTION="--keystores {{keystore-path}}"
+    fi
+
+    forge script "script/{{name}}.s.sol" \
+    --rpc-url {{rpc-url}} \
+    --sender {{deployer}} \
+    ${KEYSTORE_OPTION} \
+    --sig "{{func}}" \
+    --broadcast \
+    -vvvv {{args}}
+
+deploy-localhost:
+    #!/bin/sh
+
+    just run-forge-script DeployLocalhost && pnpm deployments:sync
+
+deploy:
+    #!/bin/sh
+
+    just run-forge-script Deploy && pnpm deployments:sync
