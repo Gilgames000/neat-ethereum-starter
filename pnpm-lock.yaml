@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -108,8 +108,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0(eslint@8.42.0)(svelte@3.59.1)
       ethoolbox:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.1.5
+        version: 0.1.5
       postcss:
         specifier: ^8.4.24
         version: 8.4.24
@@ -3469,8 +3469,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /ethoolbox@0.1.4:
-    resolution: {integrity: sha512-9nIXraYsnpNBY4N4B35JlpmnFrMZxDgbTcFwMQ6khM3rdpodn1pz2C+LRwfEoiaiyd/WpqeG4O5oyay/+mQo7w==}
+  /ethoolbox@0.1.5:
+    resolution: {integrity: sha512-mkb7/hAXuNBlYTpyKilGS5apm/Zw6lZnhTF4e+CM0EY9cK9jY/qWbPb/a5bpoax2RXTuaUxHB1lv8Rp4nVhjMg==}
     dev: true
 
   /event-emitter@0.3.5:
