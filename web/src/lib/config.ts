@@ -1,15 +1,37 @@
 import type { Chain } from 'viem';
-import { sepolia, avalanche } from 'viem/chains';
+import { sepolia, avalanche, foundry } from 'viem/chains';
 import invariant from 'tiny-invariant';
+import { deployments } from './contracts';
 
 enum SupportedChainId {
+    Anvil = 31337,
     Sepolia = 11155111,
     Avalanche = 43114
 }
 
-const supportedChainsList = [avalanche, sepolia] as const;
+
+const anvil = {
+    id: SupportedChainId.Anvil,
+    network: foundry.network,
+    name: 'Anvil',
+    nativeCurrency: foundry.nativeCurrency,
+    rpcUrls: foundry.rpcUrls,
+    contracts: {
+        multicall3: {
+            // @ts-ignore
+            address: deployments[SupportedChainId.Anvil]?.contracts.Multicall3.address ?? '0x',
+            blockCreated: 2,
+        }
+    }
+} as const satisfies Chain;
+
+const prodChainsList = [sepolia, avalanche];
+const supportedChainsList = import.meta.env.DEV ? [anvil, ...prodChainsList] : prodChainsList;
 
 supportedChainsList.forEach((chain) => {
+    if (chain.id === SupportedChainId.Anvil) {
+        return;
+    }
     invariant(
         Object.values(SupportedChainId).includes(chain.id),
         `Supported chain ${chain.id} is not in SupportedChainId enum`
@@ -19,6 +41,9 @@ supportedChainsList.forEach((chain) => {
 Object.values(SupportedChainId)
     .filter((chainId) => typeof chainId === 'number')
     .forEach((chainId) => {
+        if (chainId === SupportedChainId.Anvil) {
+            return;
+        }
         invariant(
             supportedChainsList.some((chain) => chain.id === chainId),
             `Supported chain id ${chainId} is not in supportedChainsList`

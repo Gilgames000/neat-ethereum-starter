@@ -16,6 +16,7 @@ const makeNativeCurrency = (chainId: SupportedChainId) => {
 };
 
 export const NATIVE_CURRENCIES = {
+    [SupportedChainId.Anvil]: import.meta.env.DEV ? makeNativeCurrency(SupportedChainId.Anvil) : undefined as unknown as NativeCurrency,
     [SupportedChainId.Sepolia]: makeNativeCurrency(SupportedChainId.Sepolia),
     [SupportedChainId.Avalanche]: makeNativeCurrency(SupportedChainId.Avalanche)
 } as const;
