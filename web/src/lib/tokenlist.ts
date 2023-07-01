@@ -3,6 +3,8 @@ import { Token } from 'ethoolbox';
 import type { Address } from 'viem';
 import { selectedChainId } from './chain';
 import { localStorageStore } from '@skeletonlabs/skeleton';
+import { NATIVE_CURRENCIES } from './constants';
+import { SupportedChainId } from './config';
 
 export interface TokenList {
     name: string;
@@ -264,9 +266,18 @@ const allTrackedTokensByChainId = derived(
         for (const [chainId, tokens] of $verifiedTokensByChainId ?? []) {
             tokensByChainId.set(chainId, tokens);
         }
+        for (const [chainId, nativeCurrency] of Object.entries(NATIVE_CURRENCIES)) {
+            if (Number(chainId) === SupportedChainId.Anvil && !import.meta.env.DEV) continue;
+            const existingTokens = tokensByChainId.get(Number(chainId)) ?? [];
+            if (existingTokens.some((token) => token.equals(nativeCurrency.wrapped))) continue;
+            tokensByChainId.set(Number(chainId), [nativeCurrency.wrapped, ...existingTokens]);
+        }
         for (const [chainId, tokens] of $importedTokensByChainId ?? []) {
             const existingTokens = tokensByChainId.get(chainId) ?? [];
-            tokensByChainId.set(chainId, [...existingTokens, ...tokens]);
+            const nonDuplicateTokens = tokens.filter(
+                (token) => existingTokens.some((t) => t.equals(token)) === false
+            );
+            tokensByChainId.set(chainId, [...existingTokens, ...nonDuplicateTokens]);
         }
         return tokensByChainId;
     }

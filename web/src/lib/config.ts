@@ -25,7 +25,7 @@ const anvil = {
     }
 } as const satisfies Chain;
 
-const prodChainsList = [sepolia, avalanche];
+const prodChainsList = [avalanche, sepolia];
 const supportedChainsList = import.meta.env.DEV ? [anvil, ...prodChainsList] : prodChainsList;
 
 supportedChainsList.forEach((chain) => {

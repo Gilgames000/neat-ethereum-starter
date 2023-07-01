@@ -8,8 +8,8 @@ const makeNativeCurrency = (chainId: SupportedChainId) => {
     return new NativeCurrency(
         chainId,
         chain.nativeCurrency.decimals,
-        chain.nativeCurrency.symbol,
-        chain.nativeCurrency.name,
+        `W${chain.nativeCurrency.symbol}`,
+        `Wrapped ${chain.nativeCurrency.name}`,
         `/images/chains/currency-logos/${chainId}.svg`,
         wrappedAddress
     );

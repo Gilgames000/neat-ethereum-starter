@@ -1,7 +1,7 @@
 <script lang="ts">
     import { selectedChain, selectedChainId } from '$lib/chain';
     import TokenBalance from '$lib/components/TokenBalance.svelte';
-    import { verifiedTokensByChainId } from '$lib/tokenlist';
+    import { allTrackedTokensByChainId } from '$lib/tokenlist';
     import { isWalletConnected, walletAddress } from '$lib/wallet';
 </script>
 
@@ -10,12 +10,12 @@
     <h3 class="mb-24 text-center max-w-2xl mx-auto">
         Very many tokens on {$selectedChain.name}
     </h3>
-    {#await verifiedTokensByChainId.load()}
-        <div class="text-center">Loading verified tokens...</div>
+    {#await allTrackedTokensByChainId.load()}
+        <div class="text-center">Loading tokens...</div>
     {:then}
         <div class="mb-8">
             <div class="flex flex-wrap justify-center">
-                {#each $verifiedTokensByChainId.get($selectedChainId) ?? [] as token}
+                {#each $allTrackedTokensByChainId.get($selectedChainId) ?? [] as token}
                     <div class="w-1/2 md:w-1/3 lg:w-1/4 mb-4 px-2">
                         <div
                             class="bg-surface-900 border-primary-400 border-2 rounded-lg shadow-lg p-4"
