@@ -39,7 +39,10 @@ function createNativeBalanceStoreForChainId(chainId: SupportedChainId, walletAdd
                 const [balance] = args;
                 if (typeof balance !== 'bigint')
                     throw new Error(`getEthBalance returned ${balance} instead of a bigint`);
-                return CurrencyAmount.fromRawAmount(nativeCurrency, [balance, nativeCurrency.decimals]);
+                return CurrencyAmount.fromRawAmount(nativeCurrency, [
+                    balance,
+                    nativeCurrency.decimals
+                ]);
             }
         }
     );

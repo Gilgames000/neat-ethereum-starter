@@ -142,7 +142,7 @@ const updaterStores = supportedChainsList.map((chain) => {
 
 if (browser) {
     updaterStores.forEach((updaterStore) => {
-        updaterStore.subscribe(() => { }); // necessary to start the updater
+        updaterStore.subscribe(() => {}); // necessary to start the updater
     });
 }
 

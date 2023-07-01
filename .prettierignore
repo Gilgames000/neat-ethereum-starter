@@ -14,3 +14,6 @@ package.json
 
 # ignore folders
 **/
+
+# vercel build files
+.vercel
