@@ -1,10 +1,10 @@
 set dotenv-load
 
-deployment-context := `echo ${DEPLOYMENT_CONTEXT:-localhost}`
-deployer := `echo ${DEPLOYER:-0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266}`
-deployer-private-key := `echo ${DEPLOYER_PRIVATE_KEY:-ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}`
-rpc-url := `echo ${RPC_URL:-http://localhost:8545}`
-keystore-path := `echo ${KEYSTORE_PATH:-''}`
+export DEPLOYMENT_CONTEXT := `echo ${DEPLOYMENT_CONTEXT:-localhost}`
+export DEPLOYER := `echo ${DEPLOYER:-0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266}`
+export DEPLOYER_PRIVATE_KEY := `echo ${DEPLOYER_PRIVATE_KEY:-ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}`
+export RPC_URL := `echo ${RPC_URL:-http://localhost:8545}`
+export KEYSTORE_PATH := `echo ${KEYSTORE_PATH:-''}`
 
 all: install build
 
@@ -63,15 +63,15 @@ run-forge-script name func="run()" *args="":
     echo "Func: {{func}}"
     echo "Args: {{args}}"
 
-    if [ -n "${deployer-private-key}" ]; then
-        KEYSTORE_OPTION="--private-key {{deployer-private-key}}"
+    if [ -n "${DEPLOYER_PRIVATE_KEY}" ]; then
+        KEYSTORE_OPTION="--private-key ${DEPLOYER_PRIVATE_KEY}"
     else
-        KEYSTORE_OPTION="--keystores {{keystore-path}}"
+        KEYSTORE_OPTION="--keystores ${KEYSTORE_PATH}"
     fi
 
     forge script "script/{{name}}.s.sol" \
-    --rpc-url {{rpc-url}} \
-    --sender {{deployer}} \
+    --rpc-url ${RPC_URL} \
+    --sender ${DEPLOYER} \
     ${KEYSTORE_OPTION} \
     --sig "{{func}}" \
     --broadcast \
